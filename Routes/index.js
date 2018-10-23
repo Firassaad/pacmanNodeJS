@@ -56,9 +56,9 @@ app.delete('/pacmans/delete/:id',cors(), (req, res) => {
 
 
 //inserer un pacman
-app.post('/pacmans/add', cors(), (req, res) => {
+app.post('/pacmans/addModif', cors(), (req, res) => {
     let pac = req.body;
-    var sql = "SET @ID = 0;SET @Age = ?;SET @Famille = ?;SET @Couleur = ?;SET @Nourriture = ?; \
+    var sql = "SET @ID = ?;SET @Age = ?;SET @Famille = ?;SET @Couleur = ?;SET @Nourriture = ?; \
     CALL pacmanAddOrEdit(@ID,@Age,@Famille,@Couleur ,@Nourriture);";
 
     database.connection.query(sql, [pac.ID, pac.Age, pac.Famille, pac.Couleur , pac.Nourriture], (err, rows, fields) => {
