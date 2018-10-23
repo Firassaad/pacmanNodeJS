@@ -1,0 +1,29 @@
+{
+  "name": "pacman_nodejs",
+  "version": "1.0.0",
+  "description": "node crud",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "\u0016https://github.com/Firassaad/pacmanNodeJS.git"
+  },
+  "keywords": [
+    "nodeJS",
+    "Crud",
+    "Picman"
+  ],
+  "author": "Firas SAADAOUI",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "jsonwebtoken": "^8.3.0",
+    "mysql": "^2.15.0",
+    "raw-body": "^2.3.3",
+    "sequelize": "^4.41.0"
+  }
+}
