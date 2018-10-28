@@ -72,34 +72,3 @@ app.post('/pacmans/addModif', cors(), (req, res) => {
     })
 });
 
-
-/*
-pacmanAddOrEdit est une procédure de stockage
-                        voila la procedure utilisée :
-                            CREATE DEFINER=`root`@`localhost` PROCEDURE `pacmanAddOrEdit`(
-IN _ID INT ,
-IN _Age INT ,
-IN _Famille varchar(45),
-IN _Couleur varchar(45),
-IN _Nourriture varchar(45)
-)
-BEGIN
-IF _ID = 0 THEN
-    insert INTO pacmandb.pacmen (Age,Famille,Couleur,Nourriture)
-    value (_Age , _Famille , _Couleur , _Nourriture);
-
-    SET _ID = last_insert_id();
-else
-    update pacmandb.pacmen
-    set
-    Age = _Age,
-    Famille = _Famille,
-    Couleur = _Couleur,
-    Nourriture = _Nourriture
-    where ID=_ID;
-END IF;
-
-select _ID as `ID`;
-end
- */
-

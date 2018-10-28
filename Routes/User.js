@@ -7,7 +7,8 @@ var database = require('../Database/database');
 var cors = require('cors')
 var jwt = require('jsonwebtoken');
 // var token;
-
+const User = require('../model/user');
+app.use(bodyparser.json())
 app.listen(3000, () => console.log('Executé sur le  port num : 3000'));
 app.use(cors());
 app.use(bodyparser.urlencoded({     // to support URL-encoded bodies
@@ -24,20 +25,15 @@ app.post('/register', function (req, res) {
         "data": ""
     };
     var userData = {
-        // "id": 17,
-        // "first_name": req.body.first_name,
-        // "last_name": req.body.last_name,
-        // "email": req.body.email,
-        // "password": req.body.password,
-        // "created": today
 
-        "first_name": "test",
-        "last_name": "test",
-        "email": "test",
-        "password": "test",
+        "first_name": req.body.first_name,
+        "last_name": req.body.last_name,
+        "email": req.body.email,
+        "password": req.body.password,
         "created": today
+
+
     }
-    console.log("registre");
     database.connection.query('INSERT INTO pacmandb.users SET ?', userData, function (err, rows, fields) {
             appData["data"] = "User registered successfully!";
 
@@ -50,66 +46,25 @@ app.post('/register', function (req, res) {
 });
 
 
-app.post('/login', function (req, res) {
-
-    var appData = {};
-    // var email = req.body.email;
-    // var password = req.body.password;
-    var email = "test";
-    var password = "test";
-
-    database.connection.query('SELECT * FROM users WHERE email = ?', [email], function (err, rows, fields) {
-        if (err) {
-            appData.error = 1;
-            appData["data"] = "Error Occured!";
-            res.status(400).json(appData);
-        } else {
-            if (rows.length > 0) {
-                if (rows[0].password == password) {
-                    const token = jwt.sign(rows[0], process.env.SECRET_KEY, {
-                        expiresIn: 604800 // 1 week
-                    });
-                    // let token = jwt.sign(rows[0], process.env.SECRET_KEY, {
-                    //     expiresIn: 1440
-                    // });
-                    appData.error = 0;
-                    appData["token"] = token;
-                    res.status(200).json(appData);
-                } else {
-                    appData.error = 1;
-                    appData["data"] = "Email and Password does not match";
-                    res.status(204).json(appData);
-                }
-            } else {
-                appData.error = 1;
-                appData["data"] = "Email does not exists!";
-                res.status(204).json(appData);
-            }
-        }
-    });
-
-});
-
-app.use(function (req, res, next) {
-    headers('Content-Type: application/json');
-    var token = req.body.token || req.headers['token'];
-    var appData = {};
-    if (token) {
-        jwt.verify(token, process.env.SECRET_KEY, function (err) {
-            if (err) {
-                appData["error"] = 1;
-                appData["data"] = "Token is invalid";
-                res.status(500).json(appData);
-            } else {
-                next();
-            }
-        });
-    } else {
-        appData["error"] = 1;
-        appData["data"] = "Please send a token";
-        res.status(403).json(appData);
-    }
-});
+// app.use(function (req, res, next) {
+//     var token = req.body.token || req.headers['token'];
+//     var appData = {};
+//     if (token) {
+//         jwt.verify(token, process.env.SECRET_KEY, function (err) {
+//             if (err) {
+//                 appData["error"] = 1;
+//                 appData["data"] = "Token is invalid";
+//                 res.status(500).json(appData);
+//             } else {
+//                 next();
+//             }
+//         });
+//     } else {
+//         appData["error"] = 1;
+//         appData["data"] = "Please send a token";
+//         res.status(403).json(appData);
+//     }
+// });
 app.get('/users', (req, res) => {
     database.connection.query('SELECT * FROM pacmandb.users', (err, rows, fields) => {
         if (!err)
@@ -133,4 +88,40 @@ app.get('/getUsers', function (req, res) {
     });
 });
 
+app.post('/login1',function(req,res){
+
+    var email= req.body.email;
+    var password = req.body.password;
+    database.connection.query('SELECT * FROM pacmandb.users WHERE email = ?',[email], function (error, results, fields) {
+        if (error) {
+            // console.log("error ocurred",error);
+            res.send({
+                "code":400,
+                "failed":"error ocurred"
+            });
+        }else{
+            // console.log('The solution is: ', results);
+            if(results.length >0){
+                if(results[0].password == password){
+                    res.send({
+                        "code":200,
+                        "success":"login sucessfull"
+                    });
+                }
+                else{
+                    res.send({
+                        "code":204,
+                        "success":"Email and password does not match"
+                    });
+                }
+            }
+            else{
+                res.send({
+                    "code":204,
+                    "success":"Email does not exits"
+                });
+            }
+        }
+    });
+});
 module.exports = users;
